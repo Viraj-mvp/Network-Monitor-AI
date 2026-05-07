@@ -110,14 +110,6 @@
 ## 📊 Traffic Analytics Interface
 
 <p align="center">
-  <img src="./assets/traffic-graph.png" width="90%" />
-</p>
-
----
-
-## 🌑 Dark Theme UI
-
-<p align="center">
   <img src="./assets/dark-mode.png" width="90%" />
 </p>
 
@@ -133,16 +125,10 @@
 
 # ⚡ Quick Start
 
-## 1️⃣ Clone Repository
+##  Clone Repository
 
-```bash
-git clone https://github.com/your-username/network-ai-monitor.git
-cd network-ai-monitor
-```
 
----
-
-## 2️⃣ Install Dependencies
+## 1️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -150,7 +136,7 @@ pip install -r requirements.txt
 
 ---
 
-## 3️⃣ Run Application
+## 2️⃣ Run Application
 
 ```bash
 python dashboard_main.py
@@ -336,68 +322,22 @@ pytest tests/
 
 ---
 
-# 🐳 Future Roadmap
-
-## Planned Enterprise Features
-
-* [ ] Docker Deployment
-* [ ] Kubernetes Monitoring
-* [ ] PostgreSQL Storage
-* [ ] Prometheus Integration
-* [ ] Grafana Dashboards
-* [ ] Machine Learning Models
-* [ ] SIEM Integration
-* [ ] Packet Deep Inspection
-* [ ] Web Dashboard Version
-* [ ] Distributed Monitoring Agents
-
----
-
-# 📸 Screenshots Folder Structure
-
-```text
-assets/
-├── dashboard-preview.png
-├── dark-mode.png
-├── light-mode.png
-├── traffic-graph.png
-├── architecture.png
-└── ai-pipeline.png
-```
-
----
-
-# 🤝 Contributing
-
-Contributions are welcome.
-
-## Development Workflow
-
-```bash
-Fork → Branch → Commit → Push → Pull Request
-```
-
----
-
 # ⭐ Repository Stats Section
 
-Add these dynamically later:
 
-```md
-![GitHub stars](https://img.shields.io/github/stars/your-username/network-ai-monitor?style=social)
+<p align="center">
 
-![GitHub forks](https://img.shields.io/github/forks/your-username/network-ai-monitor?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
 
-![GitHub issues](https://img.shields.io/github/issues/your-username/network-ai-monitor)
-```
+![GitHub forks](https://img.shields.io/github/forks/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
 
----
+![GitHub issues](https://img.shields.io/github/issues/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
 
-# 📜 License
 
-MIT License © 2026
+</p>
 
 ---
+
 
 # 👨‍💻 Author
 
