@@ -1,0 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+desktop.ini
+
+# Build and distribution
+build/
+dist/
+downloads/
+out/
+*.spec
+*.exe
+*.msi
+*.whl
+
+# IDE Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+
+# Virtual Environments
+venv/
+env/
+.env/
+ENV/
+bin/
+lib/
+include/
+pip-selfcheck.json
+
+# Logs and databases
+*.log
+bandwidth_log.csv
+*.sqlite
+*.db
+
+# Sensitive Configuration
+.env
+settings.json
+*.pem
+*.key
+*.crt
+*.p12
+credentials.json
+client_secrets.json
+
+# Temporary files
+*.bak
+*.tmp
+*.temp
