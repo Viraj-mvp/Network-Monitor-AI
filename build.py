@@ -212,7 +212,7 @@ def build_executable(onefile: bool = True):
     # Hidden imports
     cmd.extend(get_hidden_imports())
     
-    # Exclude unnecessary modules to reduce size
+    # Exclude unnecessary modules to reduce size and avoid conflicts
     excludes = [
         '--exclude-module', 'tkinter',
         '--exclude-module', 'unittest',
@@ -221,6 +221,12 @@ def build_executable(onefile: bool = True):
         '--exclude-module', 'email',
         '--exclude-module', 'http.server',
         '--exclude-module', 'xmlrpc',
+        '--exclude-module', 'PyQt6',
+        '--exclude-module', 'PyQt5',
+        '--exclude-module', 'PyQt4',
+        '--exclude-module', 'PyQt6.QtCore',
+        '--exclude-module', 'PyQt6.QtGui',
+        '--exclude-module', 'PyQt6.QtWidgets',
     ]
     cmd.extend(excludes)
     
