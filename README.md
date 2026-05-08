@@ -94,8 +94,6 @@
 + Real-Time Interface Monitoring
 + AI-Based Anomaly Detection
 + Historical Traffic Logging
-+ Animated Dashboard Widgets
-+ Cyberpunk Theme Engine
 + Email Alert System
 + Responsive Desktop UI
 + Multi-Threaded Processing
@@ -107,14 +105,6 @@
 # 🖥️ Dashboard Showcase
 
 ## 📊 Traffic Analytics Interface
-
-<p align="center">
-  <img src="./assets/traffic-graph.png" width="90%" />
-</p>
-
----
-
-## 🌑 Dark Theme UI
 
 <p align="center">
   <img src="./assets/dark-mode.png" width="90%" />
