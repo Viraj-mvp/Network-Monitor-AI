@@ -9,6 +9,9 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -21,22 +24,36 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Upgrade pip and install build dependencies
+      - name: Debug - List files
         run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller pillow
+          dir
+          type requirements.txt
 
-      - name: Install project dependencies
+      - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install pyinstaller pillow
           pip install -r requirements.txt
+          pip list
 
       - name: Build Windows executable
         run: |
-          python build.py --onefile --archive
-        timeout-minutes: 30
+          python -m PyInstaller --version
+          python build.py --onefile --archive --verbose
+        timeout-minutes: 45
+
+      - name: Debug - Check dist folder
+        if: always()
+        run: |
+          if exist dist (
+            dir dist /s
+          ) else (
+            echo "dist folder not found"
+          )
 
       - name: Upload Windows executable
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: NetworkAIMonitor-Windows
           path: dist/*
@@ -53,22 +70,27 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Upgrade pip and install build dependencies
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           pip install pyinstaller pillow
-
-      - name: Install project dependencies
-        run: |
           pip install -r requirements.txt
+          pip list
 
       - name: Build macOS executable
         run: |
-          python build.py --onefile --archive
-        timeout-minutes: 30
+          python -m PyInstaller --version
+          python build.py --onefile --archive --verbose
+        timeout-minutes: 45
+
+      - name: Debug - Check dist folder
+        if: always()
+        run: |
+          ls -la dist/ 2>/dev/null || echo "dist folder not found"
 
       - name: Upload macOS executable
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: NetworkAIMonitor-macOS
           path: dist/*
@@ -88,24 +110,29 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-glx libxkbcommon-x11-0 libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
+          sudo apt-get install -y libgl1-mesa-glx libxkbcommon-x11-0 libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libegl1
 
-      - name: Upgrade pip and install build dependencies
+      - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           pip install pyinstaller pillow
-
-      - name: Install project dependencies
-        run: |
           pip install -r requirements.txt
+          pip list
 
       - name: Build Linux executable
         run: |
-          python build.py --onefile --archive
-        timeout-minutes: 30
+          python -m PyInstaller --version
+          python build.py --onefile --archive --verbose
+        timeout-minutes: 45
+
+      - name: Debug - Check dist folder
+        if: always()
+        run: |
+          ls -la dist/ 2>/dev/null || echo "dist folder not found"
 
       - name: Upload Linux executable
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: NetworkAIMonitor-Linux
           path: dist/*
