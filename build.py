@@ -223,12 +223,12 @@ def build_executable(onefile: bool = True):
     cmd.extend(get_hidden_imports())
     
     # Exclude unnecessary modules to reduce size and avoid conflicts
+    # NOTE: Don't exclude 'email' - it's needed by pkg_resources
     excludes = [
         '--exclude-module', 'tkinter',
         '--exclude-module', 'unittest',
         '--exclude-module', 'pytest',
         '--exclude-module', 'pydoc',
-        '--exclude-module', 'email',
         '--exclude-module', 'http.server',
         '--exclude-module', 'xmlrpc',
         '--exclude-module', 'PyQt6',
