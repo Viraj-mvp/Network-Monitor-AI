@@ -1,9 +1,18 @@
-# dashboard/main_window.py (simplified version)
+"""
+Main Window - Updated to use ConfigManager
+"""
+
 import sys
+from pathlib import Path
 from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 import darkdetect
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # Import our panels
 from dashboard.interface_panel import InterfacePanel
@@ -15,18 +24,24 @@ from dashboard.theme import ThemeManager
 # Import core modules
 from core.network_monitor import get_interfaces_bandwidth_mbps
 from core.ai_engine import InterfaceThresholdDetector
-from core.email_alert import send_email_alert
+from core.email_alert import send_email_alert, is_email_configured
+
+# Import config
+from config import get_config_manager, get_credential_manager
 
 class MonitoringWorker(QObject):
     data_ready = Signal(dict)
     error_occurred = Signal(str)
 
-    def __init__(self, detector, thresholds):
+    def __init__(self, detector, thresholds, config_mgr, email_enabled=False, receiver_email=""):
         super().__init__()
         self.detector = detector
         self.thresholds = thresholds
-        self.email_enabled = False
-        self.receiver_email = ""
+        self.config_mgr = config_mgr
+        # Load email settings
+        email = self.config_mgr.email
+        self.email_enabled = email.enabled
+        self.receiver_email = email.receiver_email
 
     @Slot()
     def fetch_data(self):
@@ -64,16 +79,39 @@ class MainWindow(QMainWindow):
         
         # Initialize monitoring state
         self.monitoring_active = False
+        # Initialize config manager
+        self.config_mgr = get_config_manager()
+        self.cred_mgr = get_credential_manager()
+        
+        # Load email settings first
+        email = self.config_mgr.email
+        self.email_enabled = email.enabled
+        self.receiver_email = email.receiver_email
+        
+        # Load thresholds from config
+        monitoring = self.config_mgr.monitoring
         self.thresholds = {
-            'WiFi': {'in': 1.0, 'out': 0.5},
-            'Ethernet': {'in': 5.0, 'out': 2.0},
+            'WiFi': {
+                'in': monitoring.wifi_threshold_in, 
+                'out': monitoring.wifi_threshold_out
+            },
+            'Ethernet': {
+                'in': monitoring.ethernet_threshold_in, 
+                'out': monitoring.ethernet_threshold_out
+            },
             'Default': {'in': 2.0, 'out': 1.0}
         }
         self.detector = InterfaceThresholdDetector(self.thresholds)
         
         # Setup worker thread
         self.worker_thread = QThread()
-        self.worker = MonitoringWorker(self.detector, self.thresholds)
+        self.worker = MonitoringWorker(
+            self.detector, 
+            self.thresholds, 
+            self.config_mgr,
+            email_enabled=self.email_enabled, 
+            receiver_email=self.receiver_email
+        )
         self.worker.moveToThread(self.worker_thread)
         self.worker.data_ready.connect(self.handle_monitoring_data)
         self.worker.error_occurred.connect(self.handle_error)
@@ -86,9 +124,12 @@ class MainWindow(QMainWindow):
         # Setup UI
         self.setup_ui()
         
-        # Apply initial theme
+        # Apply initial theme from config
         self.theme_manager = ThemeManager()
-        self.theme_manager.set_theme('dark' if darkdetect.isDark() else 'light')
+        theme = self.config_mgr.appearance.theme
+        if theme == "auto":
+            theme = 'dark' if darkdetect.isDark() else 'light'
+        self.theme_manager.set_theme(theme)
     
     def setup_ui(self):
         self.setup_menu()
@@ -177,17 +218,23 @@ class MainWindow(QMainWindow):
 
     def update_settings(self, settings):
         """Handle settings changes from the settings panel"""
-        self.thresholds = settings.get("thresholds", self.thresholds)
-        email_settings = settings.get("email", {})
-        self.email_enabled = email_settings.get("enabled", False)
-        self.receiver_email = email_settings.get("receiver", "")
+        # Update thresholds
+        if "thresholds" in settings:
+            self.thresholds.update(settings["thresholds"])
+            if hasattr(self, 'detector'):
+                self.detector.thresholds.update(self.thresholds)
         
-        # Update worker and detector
+        # Update email settings
+        if "email" in settings:
+            email_settings = settings["email"]
+            self.email_enabled = email_settings.get("enabled", False)
+            self.receiver_email = email_settings.get("receiver", "")
+        
+        # Update worker
         if hasattr(self, 'worker'):
             self.worker.thresholds = self.thresholds
             self.worker.email_enabled = self.email_enabled
             self.worker.receiver_email = self.receiver_email
-            self.detector.thresholds.update(self.thresholds)
             
         self.log_viewer.log_message("Application settings updated.")
 

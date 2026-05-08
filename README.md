@@ -1,458 +1,197 @@
-# 🚀 Network AI Monitor
+# Network AI Monitor
 
-### AI-Powered Real-Time Network Traffic Intelligence Platform
+**AI-Powered Real-Time Network Traffic Intelligence**
 
-<p align="center">
+[![Download](https://img.shields.io/github/v/release/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
 
-  <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/PySide6-GUI-41CD52?style=for-the-badge&logo=qt&logoColor=white" />
-  <img src="https://img.shields.io/badge/AI-Anomaly%20Detection-FF6B6B?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge" />
+Monitor • Analyze • Detect • Alert
 
-</p>
+---
+
+Network AI Monitor is a professional desktop application that provides real-time network traffic monitoring with AI-powered anomaly detection. Simply download, install, and start monitoring your network immediately — no configuration files to edit, no Python to install.
+
+![Dashboard Preview](./assets/dashboard-preview.png)
+
+---
+
+## ✨ Features
+
+- **🔍 Real-Time Monitoring** — Live upload/download tracking for all network interfaces
+- **🤖 AI Anomaly Detection** — Automatically detects suspicious traffic patterns
+- **📧 Email Alerts** — Get notified instantly when anomalies are detected
+- **📊 Live Dashboard** — Beautiful real-time graphs and statistics
+- **🌓 Dark/Light Themes** — Choose your preferred appearance
+- **🔔 System Tray** — Runs quietly in the background
+- **📝 Traffic Logging** — Historical data for analysis
+
+---
+
+## 🚀 Quick Start
+
+### Windows
+
+1. Download `NetworkAIMonitor-Windows.zip` from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
+2. Extract the ZIP to any folder
+3. Run `NetworkAIMonitor.exe`
+4. Complete the setup wizard on first launch
+5. Done! Monitoring starts automatically
+
+### macOS
+
+1. Download `NetworkAIMonitor-macOS.tar.gz` from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
+2. Extract the archive: `tar -xzf NetworkAIMonitor-macOS.tar.gz`
+3. Open `NetworkAIMonitor.app`
+4. Complete the setup wizard on first launch
+5. Done! Monitoring starts automatically
+
+### Linux
+
+1. Download `NetworkAIMonitor-Linux.tar.gz` from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
+2. Extract the archive: `tar -xzf NetworkAIMonitor-Linux.tar.gz`
+3. Run: `./NetworkAIMonitor-Linux/NetworkAIMonitor`
+4. Complete the setup wizard on first launch
+5. Done! Monitoring starts automatically
+
+---
+
+## 📖 User Guide
+
+### First Launch Setup
+
+When you first open Network AI Monitor, a setup wizard will guide you through:
+
+1. **Monitoring Preferences** — Select which network interface to monitor and set your traffic thresholds
+2. **Email Alerts** (Optional) — Configure Gmail notifications for instant anomaly alerts
+3. **Appearance** — Choose dark/light theme and startup behavior
+4. **Ready!** — Start monitoring immediately
+
+All settings are saved automatically and persist between sessions.
+
+### Using the Dashboard
+
+- **Start/Stop Monitoring** — Use the toolbar buttons or system tray menu
+- **View Traffic** — See real-time bandwidth for each network interface
+- **Check Alerts** — View detected anomalies in the Alerts tab
+- **Review Logs** — Access historical data in the Logs tab
+- **Change Settings** — Modify any setting from the Settings tab
+
+### System Tray
+
+Network AI Monitor runs in your system tray for continuous monitoring:
+
+- **Double-click** the tray icon to show/hide the dashboard
+- **Right-click** for quick actions (start/stop, settings, exit)
+- **Minimize to tray** — The app keeps monitoring even when hidden
+
+---
+
+## ⚙️ Email Alerts Setup
+
+To receive email notifications for network anomalies:
+
+1. Go to **Settings** → **Email Alerts**
+2. Enable "Email Alerts"
+3. Enter your **Gmail address**
+4. Enter your **Gmail App Password** (not your regular password)
+5. Specify the **receiver email** (can be the same as sender)
+6. Click **Test Email** to verify
+7. Click **Save Settings**
+
+**Creating a Gmail App Password:**
+1. Go to [Google Account Settings](https://myaccount.google.com/security)
+2. Enable 2-Step Verification if not already enabled
+3. Go to "App passwords" under 2-Step Verification
+4. Generate a new app password for "Mail"
+5. Copy the 16-character password to Network AI Monitor
+
+---
+
+## 🖥️ System Requirements
+
+| Platform | Minimum | Recommended |
+|----------|---------|-------------|
+| Windows | Windows 10 | Windows 11 |
+| macOS | macOS 11 (Big Sur) | macOS 14 (Sonoma) |
+| Linux | Ubuntu 20.04 / Fedora 34 | Latest LTS |
+| RAM | 4 GB | 8 GB |
+| Storage | 200 MB | 500 MB |
+| Network | Any interface | WiFi or Ethernet |
+
+---
+
+## 🆘 Troubleshooting
+
+### App won't start
+- **Windows**: Install [Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+- **macOS**: Right-click app → Open (bypass Gatekeeper for first launch)
+- **Linux**: Install Qt dependencies: `sudo apt install libgl1 libxkbcommon-x11-0`
+
+### No network interfaces shown
+- Run the app as administrator/root (required for network monitoring)
+- Check firewall settings (app needs network access)
+
+### Email alerts not working
+- Verify Gmail App Password is correct (not your regular password)
+- Enable "Less secure app access" is **not** required for App Passwords
+- Check spam folders for test emails
+- Use the "Test Email" button in settings to diagnose issues
+
+### High CPU usage
+- Increase the monitoring interval in Settings (try 5-10 seconds)
+- Reduce the number of monitored interfaces
+
+---
+
+## 🔒 Security & Privacy
+
+- **Local Only** — All data stays on your computer
+- **Encrypted Credentials** — Email passwords stored in OS keyring
+- **No External Connections** — App only connects to Gmail SMTP (if configured)
+- **No Telemetry** — We don't collect any usage data
+
+**Configuration Storage:**
+- Windows: `%LOCALAPPDATA%\NetworkAIMonitor\`
+- macOS: `~/Library/Application Support/NetworkAIMonitor/`
+- Linux: `~/.config/NetworkAIMonitor/`
+
+---
+
+## 📦 What's Included
+
+Each release package contains:
+
+- `NetworkAIMonitor` — Main executable
+- `_internal/` — Runtime dependencies (auto-managed)
+- No Python installation required
+- No additional downloads needed
+
+---
+
+## 🔄 Updates
+
+Network AI Monitor checks for updates automatically. When a new version is available:
+
+1. You'll see a notification in the dashboard
+2. Click the download link in the notification
+3. Download the new version
+4. Replace your existing installation
+5. Your settings are preserved
+
+---
+
+## 📄 License
+
+MIT License — See [LICENSE](LICENSE) file for details.
+
+---
+
+## 🤝 Support
+
+- **Issues & Bugs**: [GitHub Issues](https://github.com/Viraj-mvp/Network-Monitor-AI/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/Viraj-mvp/Network-Monitor-AI/discussions)
 
 ---
 
 <p align="center">
-  <b>Monitor • Analyze • Detect • Secure</b>
+  <b>Download → Open → Monitor. It's that simple.</b>
 </p>
-
----
-
-<p align="center">
-  Real-time bandwidth analytics, AI-powered anomaly detection, live visualization dashboards,  
-  and cybersecurity-focused traffic intelligence — all inside a modern Python desktop application.
-</p>
-
----
-
-# ✨ Preview
-
-<p align="center">
-  <img src="./assets/dashboard-preview.png" width="100%" />
-</p>
-
----
-
-# 🔥 Highlights
-
-<table>
-<tr>
-<td width="50%">
-
-## ⚡ Real-Time Monitoring
-
-* Live upload/download tracking
-* Per-interface bandwidth analytics
-* High-frequency throughput polling
-* WiFi + Ethernet support
-
-</td>
-
-<td width="50%">
-
-## 🧠 AI Traffic Detection
-
-* Suspicious activity recognition
-* Traffic spike analysis
-* Inbound/Outbound anomaly prediction
-* Intelligent threshold engine
-
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-
-## 🎨 Modern Cyber Dashboard
-
-* Animated traffic gauges
-* Live graph rendering
-* Dark/Light theme engine
-* Smooth 300ms transitions
-
-</td>
-
-<td width="50%">
-
-## 🔒 Security-Oriented Design
-
-* SMTP alerting system
-* Environment variable isolation
-* CSV forensic logging
-* Multithreaded architecture
-
-</td>
-</tr>
-</table>
-
----
-
-# 🌐 Live Features
-
-```diff
-+ Real-Time Interface Monitoring
-+ AI-Based Anomaly Detection
-+ Historical Traffic Logging
-+ Email Alert System
-+ Responsive Desktop UI
-+ Multi-Threaded Processing
-+ Performance Optimized Rendering
-```
-
----
-
-# 🖥️ Dashboard Showcase
-
-## 📊 Traffic Analytics Interface
-
-<p align="center">
-  <img src="./assets/dark-mode.png" width="90%" />
-</p>
-
----
-
-## ☀️ Light Theme UI
-
-<p align="center">
-  <img src="./assets/light-mode.png" width="90%" />
-</p>
-
----
-
-# ⚡ Quick Start
-
-## 🖥️ Desktop Installation (Recommended)
-
-### Download Pre-built Executables
-
-[![Download Latest Release](https://img.shields.io/github/v/release/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
-
-**Latest Release:** [Download for your platform](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
-
-### Available Platforms
-
-| Platform | Download | File |
-|----------|----------|------|
-| Windows | [Download](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest) | `NetworkAIMonitor-Windows.zip` |
-| macOS | [Download](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest) | `NetworkAIMonitor-macOS.tar.gz` |
-| Linux | [Download](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest) | `NetworkAIMonitor-Linux.tar.gz` |
-
-### Quick Start
-
-1. **Download** the appropriate file for your OS from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
-2. **Extract** the archive to any folder
-3. **Run** the executable:
-   - **Windows**: Double-click `NetworkAIMonitor-Windows-Portable.exe`
-   - **macOS**: Open `NetworkAIMonitor.app`
-   - **Linux**: Run `./NetworkAIMonitor-Linux-Portable` in terminal
-4. **Configure** email alerts in Settings (optional)
-
-### System Requirements
-
-| Platform | Minimum Requirements |
-|----------|---------------------|
-| Windows | Windows 10/11, 4GB RAM, 100MB disk |
-| macOS | macOS 10.14+, 4GB RAM, 100MB disk |
-| Linux | Ubuntu 20.04+/similar, 4GB RAM, 100MB disk |
-
----
-
-## 🛠️ Developer Setup
-
-### Clone Repository
-
-```bash
-git clone https://github.com/Viraj-mvp/Network-Monitor-AI.git
-cd Network-Monitor-AI
-```
-
-### 1️⃣ Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## 2️⃣ Run Application
-
-```bash
-python dashboard_main.py
-```
-
-### Building Desktop App (Developers)
-
-Build standalone executables for any platform:
-
-```bash
-# Install build dependencies
-pip install pyinstaller pillow
-
-# Build for current platform
-python build.py --all --archive
-
-# Build options
-python build.py --onefile      # Single executable (default)
-python build.py --directory    # Directory bundle
-python build.py --archive      # Create compressed archive
-```
-
-**Requirements:**
-- Python 3.8 or higher
-- PyInstaller (auto-installed by build script)
-
----
-
-## 📦 GitHub Actions Auto-Build
-
-This repository automatically builds desktop apps on every release:
-
-1. Create a new tag: `git tag v1.0.0`
-2. Push the tag: `git push origin v1.0.0`
-3. GitHub Actions will build and attach installers to the release
-4. Users can download directly from the Releases page
-
----
-
----
-
-# 🏗️ System Architecture
-
-<p align="center">
-  <img src="./assets/architecture.png" width="95%" />
-</p>
-
----
-
-```text
-┌──────────────────────┐
-│ Network Interfaces   │
-└──────────┬───────────┘
-           │
-           ▼
-┌────────────────────────┐
-│ network_monitor.py     │
-│ psutil Traffic Engine  │
-└──────────┬─────────────┘
-           │
-           ▼
-┌────────────────────────┐
-│ ai_engine.py           │
-│ Traffic Intelligence   │
-└──────────┬─────────────┘
-           │
- ┌─────────┴─────────┐
- ▼                   ▼
-CSV Logging     Email Alerts
-           │
-           ▼
-┌────────────────────────┐
-│ PySide6 Dashboard      │
-│ Live Visualization UI  │
-└────────────────────────┘
-```
-
----
-
-# 📂 Project Structure
-
-```text
-network-ai-monitor/
-│
-├── core/
-│   ├── network_monitor.py
-│   ├── ai_engine.py
-│   └── email_alert.py
-│
-├── dashboard/
-│   ├── main_window.py
-│   ├── widgets.py
-│   └── theme.py
-│
-├── services/
-├── docs/
-├── tests/
-│
-├── dashboard_main.py
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
----
-
-# 🧠 AI Detection Pipeline
-
-<p align="center">
-  <img src="./assets/ai-pipeline.png" width="85%" />
-</p>
-
----
-
-```text
-Network Traffic
-      ↓
-Packet Throughput Sampling
-      ↓
-Behavior Pattern Analysis
-      ↓
-Threshold Intelligence Engine
-      ↓
-Anomaly Classification
-      ↓
-Alert Dispatch + Logging
-```
-
----
-
-# 🎨 UI & Theme Engine
-
-| Feature       | Description                               |
-| ------------- | ----------------------------------------- |
-| 🌑 Dark Mode  | Cyberpunk-inspired monitoring environment |
-| ☀️ Light Mode | WCAG AA accessible high-contrast theme    |
-| ✨ Animations  | 300ms smooth interpolated transitions     |
-| 📱 Responsive | Supports 320px → 4K scaling               |
-| ⚡ Optimized   | Minimal repaint architecture              |
-
----
-
-# 📧 Email Alert System
-
-Automatically sends alerts when suspicious activity is detected.
-
-## Example Alert
-
-```yaml
-[ALERT]
-Status: ANOMALY_OUTBOUND
-Interface: WiFi
-Upload Speed: 85 Mbps
-Timestamp: 2026-05-07 14:30:12
-```
-
----
-
-# ⚙️ Environment Configuration
-
-Create `.env`
-
-```env
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-
-SENDER_EMAIL=your-email@gmail.com
-APP_PASSWORD=your-app-password
-
-RECEIVER_EMAIL=receiver@gmail.com
-```
-
----
-
-# 📈 Performance Engineering
-
-## ⚡ Optimizations
-
-* MD5-based UI memoization
-* Async background monitoring
-* QThread-based processing
-* Reduced redundant repaints
-* Efficient graph rendering
-
----
-
-## 🚀 Performance Results
-
-| Metric               | Improvement            |
-| -------------------- | ---------------------- |
-| GUI Repaints         | ~90% Reduction         |
-| UI Responsiveness    | Significantly Improved |
-| Monitoring Stability | High                   |
-| CPU Overhead         | Minimal                |
-
----
-
-# 🔒 Security
-
-## Security Features
-
-```diff
-+ Environment Variable Isolation
-+ Secure SMTP Credential Handling
-+ No Hardcoded Secrets
-+ Dependency Vulnerability Audits
-+ Background Thread Isolation
-```
-
----
-
-# 🧪 Testing
-
-```bash
-pytest tests/
-```
-
----
-
-# ⭐ Repository Stats Section
-
-
-<p align="center">
-
-![GitHub Repo stars](https://img.shields.io/github/stars/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
-
-![GitHub forks](https://img.shields.io/github/forks/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
-
-![GitHub issues](https://img.shields.io/github/issues/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
-
-
-</p>
-
----
-
-
-# 👨‍💻 Author
-
-### Built for:
-
-* Cybersecurity Engineers
-* SOC Analysts
-* Ethical Hackers
-* Network Researchers
-* Performance Engineers
-
----
-
-# 📁 Download Options
-
-| Platform | File | Description |
-|----------|------|-------------|
-| 🪟 **Windows** | `NetworkAIMonitor-Windows.zip` | Portable executable for Windows |
-| 🍎 **macOS** | `NetworkAIMonitor-macOS.tar.gz` | App bundle for macOS |
-| � **Linux** | `NetworkAIMonitor-Linux.tar.gz` | Executable for Linux |
-| 🐍 **Source** | `Source Code` | Original Python source code |
-
-All executables are **portable** - no installation required, just extract and run!
-
----
-
-# 🌟 Support the Project
-
-If you like the project:
-
-```diff
-+ ⭐ Star the repository
-+ 🍴 Fork the project
-+ 🛠️ Contribute improvements
-+ 📢 Share with the community
-```
-
----
-
-# 🔥 Final Statement
-
-> “Network visibility is the foundation of cybersecurity.”
-
-**Network AI Monitor** transforms raw traffic into intelligent, actionable network insights using modern Python engineering, AI-assisted analysis, and real-time visualization systems.
-"# Network-Monitor-AI" 

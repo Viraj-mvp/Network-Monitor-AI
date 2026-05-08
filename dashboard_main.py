@@ -1,19 +1,18 @@
-import sys
-from PySide6.QtWidgets import QApplication
-from dashboard.main_window import MainWindow
+"""
+Legacy entry point - redirects to new app/main.py
+Kept for backward compatibility during development
+"""
 
-def main():
-    # Create application
-    app = QApplication(sys.argv)
-    app.setApplicationName("AI Network Monitor")
-    app.setOrganizationName("NetworkAI")
-    
-    # Create and show main window
-    window = MainWindow()
-    window.show()
-    
-    # Run application
-    sys.exit(app.exec())
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+# Import and run the new main application
+from app.main import main
 
 if __name__ == "__main__":
     main()

@@ -19,8 +19,6 @@ build/
 dist/
 downloads/
 out/
-*.spec
-!NetworkMonitor.spec
 *.exe
 *.msi
 *.app
@@ -29,9 +27,14 @@ out/
 *.deb
 *.rpm
 *.whl
-!build.py
-!build_release.py
-!NetworkMonitor.spec
+
+# Keep the new spec file
+!build/pyinstaller/NetworkMonitor.spec
+
+# Old build scripts (removed)
+build.py
+build_release.py
+NetworkMonitor.spec
 
 # IDE Settings
 .vscode/
@@ -58,8 +61,9 @@ bandwidth_log.csv
 *.sqlite
 *.db
 
-# Sensitive Configuration
+# Sensitive Configuration (these are stored in OS keyring now)
 .env
+.env.example
 settings.json
 *.pem
 *.key
@@ -67,6 +71,11 @@ settings.json
 *.p12
 credentials.json
 client_secrets.json
+
+# Runtime data (created in user directories)
+config/
+logs/
+bandwidth_log.csv
 
 # Temporary files
 *.bak

@@ -1,0 +1,139 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-build.txt
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller build/pyinstaller/NetworkMonitor.spec
+
+      - name: Create ZIP archive
+        run: |
+          cd dist
+          Rename-Item NetworkAIMonitor NetworkAIMonitor-Windows
+          Compress-Archive -Path NetworkAIMonitor-Windows -DestinationPath NetworkAIMonitor-Windows.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: dist/NetworkAIMonitor-Windows.zip
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-build.txt
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller build/pyinstaller/NetworkMonitor.spec
+
+      - name: Create app bundle structure
+        run: |
+          cd dist
+          mv NetworkAIMonitor NetworkAIMonitor.app
+          # Create basic app structure
+          mkdir -p NetworkAIMonitor.app/Contents/MacOS
+          mkdir -p NetworkAIMonitor.app/Contents/Resources
+          # Move executable
+          mv NetworkAIMonitor.app/NetworkAIMonitor NetworkAIMonitor.app/Contents/MacOS/ || true
+
+      - name: Create archive
+        run: |
+          cd dist
+          tar -czf NetworkAIMonitor-macOS.tar.gz NetworkAIMonitor.app
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: dist/NetworkAIMonitor-macOS.tar.gz
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-glx libxkbcommon-x11-0 libxcb-xinerama0
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-build.txt
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller build/pyinstaller/NetworkMonitor.spec
+
+      - name: Create archive
+        run: |
+          cd dist
+          mv NetworkAIMonitor NetworkAIMonitor-Linux
+          tar -czf NetworkAIMonitor-Linux.tar.gz NetworkAIMonitor-Linux
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: dist/NetworkAIMonitor-Linux.tar.gz
+
+  release:
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            windows-build/*.zip
+            macos-build/*.tar.gz
+            linux-build/*.tar.gz
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

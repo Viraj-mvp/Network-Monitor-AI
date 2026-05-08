@@ -23,18 +23,17 @@ def resource_path(relative_path: str) -> str:
         icon_path = resource_path('assets/icon.png')
     """
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        # This is where bundled resources are extracted
+        # PyInstaller onefile mode: creates a temp folder and stores path in _MEIPASS
         base_path = Path(sys._MEIPASS)
     except AttributeError:
-        # Running in normal Python environment (development)
-        # Use the directory containing the script
+        # Running in normal Python environment OR PyInstaller onedir mode
         if getattr(sys, 'frozen', False):
-            # Running as compiled executable but _MEIPASS not set
+            # PyInstaller onedir mode: resources are alongside the executable
             base_path = Path(sys.executable).parent
         else:
-            # Running from source
-            base_path = Path('.').resolve()
+            # Running from source - use the project root
+            # Get the directory containing this file, then go up to project root
+            base_path = Path(__file__).parent.parent.resolve()
     
     return str(base_path / relative_path)
 
