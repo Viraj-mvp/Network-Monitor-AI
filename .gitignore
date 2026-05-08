@@ -8,19 +8,27 @@ __pycache__/
 .DS_Store
 .DS_Store?
 ._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
 desktop.ini
+*.lnk
 
 # Build and distribution
 build/
 dist/
 downloads/
 out/
-!NetworkMonitor.spec
-!build.py
+*.spec
 *.exe
 *.msi
+*.app
+*.dmg
+*.pkg
+*.deb
+*.rpm
 *.whl
+!build.py
 
 # IDE Settings
 .vscode/

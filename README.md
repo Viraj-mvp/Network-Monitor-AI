@@ -124,34 +124,37 @@
 
 ## 🖥️ Desktop Installation (Recommended)
 
-### Download Pre-built Installer
+### Download Pre-built Executables
 
-[![Download for Windows](https://img.shields.io/badge/Download-Windows%20Setup-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
+[![Download Latest Release](https://img.shields.io/github/v/release/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
 
-**Latest Release:** [Download Network AI Monitor v1.0.0](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
+**Latest Release:** [Download for your platform](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
 
-### Installation Steps
+### Available Platforms
 
-1. **Download** the latest `NetworkAIMonitor-Setup-v1.0.0.exe` from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
-2. **Run** the installer and follow the setup wizard
-3. **Launch** Network AI Monitor from your Desktop or Start Menu
-4. **Configure** your email alerts in Settings (optional)
+| Platform | Download | File |
+|----------|----------|------|
+| Windows | [Download](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest) | `NetworkAIMonitor-Windows.zip` |
+| macOS | [Download](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest) | `NetworkAIMonitor-macOS.tar.gz` |
+| Linux | [Download](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest) | `NetworkAIMonitor-Linux.tar.gz` |
+
+### Quick Start
+
+1. **Download** the appropriate file for your OS from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
+2. **Extract** the archive to any folder
+3. **Run** the executable:
+   - **Windows**: Double-click `NetworkAIMonitor-Windows-Portable.exe`
+   - **macOS**: Open `NetworkAIMonitor.app`
+   - **Linux**: Run `./NetworkAIMonitor-Linux-Portable` in terminal
+4. **Configure** email alerts in Settings (optional)
 
 ### System Requirements
 
-- Windows 10/11 (64-bit)
-- 4GB RAM minimum (8GB recommended)
-- 100MB free disk space
-- Network interface (WiFi/Ethernet)
-
-### Portable Version
-
-For users who prefer a portable app without installation:
-
-1. Download `NetworkAIMonitor-Portable.exe` or `NetworkAIMonitor-Portable.zip`
-2. Extract to any folder (for ZIP version)
-3. Run `NetworkAIMonitor.exe` directly
-4. All data saved in the same folder
+| Platform | Minimum Requirements |
+|----------|---------------------|
+| Windows | Windows 10/11, 4GB RAM, 100MB disk |
+| macOS | macOS 10.14+, 4GB RAM, 100MB disk |
+| Linux | Ubuntu 20.04+/similar, 4GB RAM, 100MB disk |
 
 ---
 
@@ -180,24 +183,24 @@ python dashboard_main.py
 
 ### Building Desktop App (Developers)
 
-To build the desktop installer locally:
+Build standalone executables for any platform:
 
 ```bash
 # Install build dependencies
 pip install pyinstaller pillow
 
-# Build using the build script
-python build.py --all
+# Build for current platform
+python build.py --all --archive
 
-# Or build individual components
-python build.py --onefile     # Portable executable
-python build.py --installer   # Windows installer (requires Inno Setup)
+# Build options
+python build.py --onefile      # Single executable (default)
+python build.py --directory    # Directory bundle
+python build.py --archive      # Create compressed archive
 ```
 
-**Requirements for building installer:**
-- [Inno Setup 6](https://jrsoftware.org/isdl.php) (for Windows installer)
+**Requirements:**
 - Python 3.8 or higher
-- Windows 10/11
+- PyInstaller (auto-installed by build script)
 
 ---
 
@@ -423,12 +426,14 @@ pytest tests/
 
 # 📁 Download Options
 
-| Format | File | Description |
-|--------|------|-------------|
-| 💿 **Installer** | `NetworkAIMonitor-Setup-v1.0.0.exe` | Full Windows installer with Start Menu shortcuts |
-| 📦 **Portable** | `NetworkAIMonitor-Portable.exe` | Single-file executable, no installation needed |
-| 🗜️ **ZIP** | `NetworkAIMonitor-Portable.zip` | Portable version in ZIP format |
-| 🐍 **Source** | `Source Code (zip)` | Original Python source code |
+| Platform | File | Description |
+|----------|------|-------------|
+| 🪟 **Windows** | `NetworkAIMonitor-Windows.zip` | Portable executable for Windows |
+| 🍎 **macOS** | `NetworkAIMonitor-macOS.tar.gz` | App bundle for macOS |
+| � **Linux** | `NetworkAIMonitor-Linux.tar.gz` | Executable for Linux |
+| 🐍 **Source** | `Source Code` | Original Python source code |
+
+All executables are **portable** - no installation required, just extract and run!
 
 ---
 

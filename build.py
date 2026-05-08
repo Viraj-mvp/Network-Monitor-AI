@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Build script for Network AI Monitor Desktop Application
-Generates standalone executable and installer
+Network AI Monitor - Cross-Platform Build Script
+Builds standalone executables for Windows, macOS, and Linux using PyInstaller
 """
 
 import os
@@ -9,6 +9,7 @@ import sys
 import subprocess
 import shutil
 import argparse
+import platform
 from pathlib import Path
 
 def print_step(step: str):
@@ -24,50 +25,67 @@ def run_command(cmd: list, cwd: str = None) -> bool:
             cmd,
             cwd=cwd,
             check=True,
-            capture_output=True,
+            capture_output=False,
             text=True
         )
-        if result.stdout:
-            print(result.stdout)
         return True
     except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
-        if e.stdout:
-            print(e.stdout)
-        if e.stderr:
-            print(e.stderr)
+        print(f"Error: Command failed with exit code {e.returncode}")
         return False
+    except FileNotFoundError as e:
+        print(f"Error: Command not found - {e}")
+        return False
+
+def get_platform():
+    """Get current platform"""
+    system = platform.system().lower()
+    if system == 'darwin':
+        return 'macos'
+    return system
+
+def get_executable_name():
+    """Get executable name based on platform"""
+    system = get_platform()
+    if system == 'windows':
+        return 'NetworkAIMonitor.exe'
+    elif system == 'macos':
+        return 'NetworkAIMonitor.app'
+    else:
+        return 'NetworkAIMonitor'
 
 def clean_build():
     """Clean previous build artifacts"""
     print_step("Cleaning previous builds")
     
-    dirs_to_clean = ['build', 'dist', '__pycache__']
+    dirs_to_clean = ['build', 'dist']
     for dir_name in dirs_to_clean:
         if os.path.exists(dir_name):
             shutil.rmtree(dir_name)
-            print(f"Removed: {dir_name}")
+            print(f"  ✓ Removed: {dir_name}")
     
     # Clean pycache in subdirectories
     for root, dirs, files in os.walk('.'):
         for dir_name in dirs:
             if dir_name == '__pycache__':
                 path = os.path.join(root, dir_name)
-                shutil.rmtree(path)
-                print(f"Removed: {path}")
+                try:
+                    shutil.rmtree(path)
+                    print(f"  ✓ Removed: {path}")
+                except:
+                    pass
 
 def install_dependencies():
     """Install required dependencies"""
     print_step("Installing dependencies")
     
-    deps = ['pyinstaller', 'pillow']
-    
-    # Install pyinstaller and other build deps
-    if not run_command([sys.executable, '-m', 'pip', 'install'] + deps):
+    # Install pyinstaller
+    print("  Installing PyInstaller...")
+    if not run_command([sys.executable, '-m', 'pip', 'install', 'pyinstaller', '--upgrade']):
         return False
     
     # Install project requirements
     if os.path.exists('requirements.txt'):
+        print("  Installing project requirements...")
         if not run_command([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt']):
             return False
     
@@ -76,13 +94,20 @@ def install_dependencies():
 def create_icon():
     """Create default icon if not exists"""
     icon_dir = Path('assets')
-    icon_path = icon_dir / 'icon.ico'
+    icon_dir.mkdir(exist_ok=True)
+    
+    system = get_platform()
+    if system == 'windows':
+        icon_path = icon_dir / 'icon.ico'
+    elif system == 'macos':
+        icon_path = icon_dir / 'icon.icns'
+    else:
+        icon_path = icon_dir / 'icon.png'
     
     if icon_path.exists():
-        return True
+        return str(icon_path)
     
     print_step("Creating application icon")
-    icon_dir.mkdir(exist_ok=True)
     
     try:
         from PIL import Image, ImageDraw
@@ -92,203 +117,299 @@ def create_icon():
         draw = ImageDraw.Draw(img)
         
         # Draw a simple network icon
-        # Background circle
         draw.ellipse([10, 10, 246, 246], fill='#2196F3', outline='#1976D2', width=5)
-        # Inner elements (simplified network representation)
         draw.ellipse([100, 100, 156, 156], fill='white')
         draw.line([(128, 60), (128, 100)], fill='white', width=8)
         draw.line([(128, 156), (128, 196)], fill='white', width=8)
         draw.line([(60, 128), (100, 128)], fill='white', width=8)
         draw.line([(156, 128), (196, 128)], fill='white', width=8)
         
-        # Save as ICO
-        img.save(icon_path, format='ICO', sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
-        print(f"Created icon: {icon_path}")
-        return True
+        # Save in appropriate format
+        if system == 'windows':
+            img.save(icon_path, format='ICO', sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+        elif system == 'macos':
+            # macOS uses .icns, save as PNG for now
+            img.save(icon_dir / 'icon.png', format='PNG')
+            icon_path = icon_dir / 'icon.png'
+        else:
+            img.save(icon_path, format='PNG')
+        
+        print(f"  ✓ Created icon: {icon_path}")
+        return str(icon_path)
         
     except ImportError:
-        print("PIL not available, skipping icon creation")
-        return True
+        print("  ℹ PIL not available, skipping icon creation")
+        return None
     except Exception as e:
-        print(f"Error creating icon: {e}")
-        return True  # Non-critical
+        print(f"  ⚠ Error creating icon: {e}")
+        return None
 
-def build_executable(onefile: bool = False):
+def get_add_data_args():
+    """Get --add-data arguments for current platform"""
+    sep = ';' if get_platform() == 'windows' else ':'
+    return [
+        f'--add-data', f'core{sep}core',
+        f'--add-data', f'dashboard{sep}dashboard',
+        f'--add-data', f'assets{sep}assets',
+        f'--add-data', f'config{sep}config',
+    ]
+
+def get_hidden_imports():
+    """Get hidden imports for PyInstaller"""
+    return [
+        '--hidden-import', 'PySide6',
+        '--hidden-import', 'PySide6.QtCore',
+        '--hidden-import', 'PySide6.QtGui',
+        '--hidden-import', 'PySide6.QtWidgets',
+        '--hidden-import', 'psutil',
+        '--hidden-import', 'matplotlib',
+        '--hidden-import', 'matplotlib.backends.backend_qt5agg',
+        '--hidden-import', 'pyqtgraph',
+        '--hidden-import', 'darkdetect',
+        '--hidden-import', 'dotenv',
+        '--hidden-import', 'core',
+        '--hidden-import', 'core.network_monitor',
+        '--hidden-import', 'core.ai_engine',
+        '--hidden-import', 'core.email_alert',
+        '--hidden-import', 'dashboard',
+        '--hidden-import', 'dashboard.main_window',
+        '--hidden-import', 'dashboard.widgets',
+        '--hidden-import', 'dashboard.theme',
+    ]
+
+def build_executable(onefile: bool = True):
     """Build the executable using PyInstaller"""
-    print_step(f"Building executable {'(one-file)' if onefile else '(directory)'}")
+    build_type = "one-file" if onefile else "directory"
+    print_step(f"Building {build_type} executable for {get_platform().title()}")
     
-    if onefile:
-        cmd = [
-            'pyinstaller',
-            '--onefile',
-            '--windowed',
-            '--name', 'NetworkAIMonitor-Portable',
-            '--icon', 'assets/icon.ico' if os.path.exists('assets/icon.ico') else None,
-            '--add-data', f'core{os.pathsep}core',
-            '--add-data', f'dashboard{os.pathsep}dashboard',
-            '--add-data', f'assets{os.pathsep}assets',
-            '--add-data', f'config{os.pathsep}config',
-            '--hidden-import', 'PySide6',
-            '--hidden-import', 'PySide6.QtCore',
-            '--hidden-import', 'PySide6.QtGui',
-            '--hidden-import', 'PySide6.QtWidgets',
-            '--hidden-import', 'psutil',
-            '--hidden-import', 'matplotlib',
-            '--hidden-import', 'pyqtgraph',
-            '--hidden-import', 'darkdetect',
-            '--hidden-import', 'dotenv',
-            'dashboard_main.py'
-        ]
-        # Remove None values
-        cmd = [c for c in cmd if c is not None]
-    else:
-        cmd = [
-            'pyinstaller',
-            'NetworkMonitor.spec',
-            '--clean',
-            '--noconfirm'
-        ]
-    
-    return run_command(cmd)
-
-def build_installer():
-    """Build Windows installer using Inno Setup"""
-    print_step("Building Windows installer")
-    
-    inno_setup_paths = [
-        r'C:\Program Files (x86)\Inno Setup 6\ISCC.exe',
-        r'C:\Program Files\Inno Setup 6\ISCC.exe',
+    # Base command
+    cmd = [
+        sys.executable, '-m', 'PyInstaller',
+        '--noconfirm',
+        '--clean',
     ]
     
-    iscc_path = None
-    for path in inno_setup_paths:
-        if os.path.exists(path):
-            iscc_path = path
-            break
+    # Windowed mode (no console)
+    cmd.append('--windowed')
     
-    if not iscc_path:
-        print("Inno Setup not found. Please install it from: https://jrsoftware.org/isdl.php")
-        print("Skipping installer creation.")
-        return False
+    # One-file or directory mode
+    if onefile:
+        cmd.append('--onefile')
+        name = f"NetworkAIMonitor-{get_platform().title()}-Portable"
+    else:
+        name = "NetworkAIMonitor"
     
-    return run_command([iscc_path, 'installer.iss'])
+    cmd.extend(['--name', name])
+    
+    # Icon
+    icon_path = create_icon()
+    if icon_path and os.path.exists(icon_path):
+        cmd.extend(['--icon', icon_path])
+    
+    # Add data files
+    cmd.extend(get_add_data_args())
+    
+    # Hidden imports
+    cmd.extend(get_hidden_imports())
+    
+    # Exclude unnecessary modules to reduce size
+    excludes = [
+        '--exclude-module', 'tkinter',
+        '--exclude-module', 'unittest',
+        '--exclude-module', 'pytest',
+        '--exclude-module', 'pydoc',
+        '--exclude-module', 'email',
+        '--exclude-module', 'http.server',
+        '--exclude-module', 'xmlrpc',
+    ]
+    cmd.extend(excludes)
+    
+    # Main script
+    cmd.append('dashboard_main.py')
+    
+    print(f"  Running: {' '.join(cmd[:5])}...")
+    return run_command(cmd)
 
-def create_portable_zip():
-    """Create a portable ZIP distribution"""
-    print_step("Creating portable ZIP archive")
+def create_archive():
+    """Create platform-specific archive"""
+    print_step("Creating distribution archive")
     
-    import zipfile
-    
+    system = get_platform()
     dist_dir = Path('dist')
-    portable_dir = dist_dir / 'NetworkAIMonitor'
     
-    if not portable_dir.exists():
-        print(f"Build directory not found: {portable_dir}")
+    if not dist_dir.exists():
+        print("  ✗ Dist directory not found")
         return False
     
-    zip_path = dist_dir / 'NetworkAIMonitor-Portable.zip'
+    # Find the built executable/directory
+    exe_name = get_executable_name()
+    source_path = dist_dir / exe_name
     
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for file_path in portable_dir.rglob('*'):
-            if file_path.is_file():
-                arcname = file_path.relative_to(portable_dir)
-                zipf.write(file_path, arcname)
-                print(f"Added: {arcname}")
+    if not source_path.exists():
+        # Try to find any built executable
+        for item in dist_dir.iterdir():
+            if item.is_dir() or (item.is_file() and not item.name.endswith('.zip')):
+                source_path = item
+                break
     
-    print(f"\nCreated: {zip_path}")
-    print(f"Size: {zip_path.stat().st_size / 1024 / 1024:.2f} MB")
-    return True
+    if not source_path or not source_path.exists():
+        print("  ✗ Built executable not found")
+        return False
+    
+    # Create archive
+    if system == 'windows':
+        import zipfile
+        zip_path = dist_dir / f'NetworkAIMonitor-{system.title()}.zip'
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+            if source_path.is_dir():
+                for file_path in source_path.rglob('*'):
+                    if file_path.is_file():
+                        zf.write(file_path, file_path.relative_to(source_path.parent))
+            else:
+                zf.write(source_path, source_path.name)
+        print(f"  ✓ Created: {zip_path}")
+        return True
+    else:
+        # For macOS and Linux, create tar.gz
+        import tarfile
+        archive_path = dist_dir / f'NetworkAIMonitor-{system.title()}.tar.gz'
+        with tarfile.open(archive_path, 'w:gz') as tar:
+            if source_path.is_dir():
+                tar.add(source_path, arcname=source_path.name)
+            else:
+                tar.add(source_path, arcname=source_path.name)
+        print(f"  ✓ Created: {archive_path}")
+        return True
 
 def verify_build():
     """Verify the build output"""
     print_step("Verifying build")
     
     dist_dir = Path('dist')
-    exe_path = dist_dir / 'NetworkAIMonitor' / 'NetworkAIMonitor.exe'
+    exe_name = get_executable_name()
+    exe_path = dist_dir / exe_name
     
-    if exe_path.exists():
-        size = exe_path.stat().st_size / 1024 / 1024
-        print(f"✓ Executable created: {exe_path}")
-        print(f"  Size: {size:.2f} MB")
-        return True
-    else:
-        print(f"✗ Executable not found: {exe_path}")
+    # Also check for platform-specific portable version
+    portable_names = [
+        f'NetworkAIMonitor-{get_platform().title()}-Portable.exe',
+        f'NetworkAIMonitor-{get_platform().title()}-Portable',
+        'NetworkAIMonitor-Portable.exe',
+        'NetworkAIMonitor-Portable',
+    ]
+    
+    found = False
+    for name in portable_names + [exe_name]:
+        path = dist_dir / name
+        if path.exists():
+            if path.is_file():
+                size = path.stat().st_size / 1024 / 1024
+                print(f"  ✓ Found: {name} ({size:.2f} MB)")
+            else:
+                print(f"  ✓ Found: {name}/ (directory)")
+            found = True
+            break
+    
+    if not found:
+        print(f"  ✗ Executable not found in {dist_dir}")
+        # List what's in dist
+        if dist_dir.exists():
+            print("  Contents:")
+            for item in dist_dir.iterdir():
+                print(f"    - {item.name}")
         return False
+    
+    return True
 
 def main():
-    parser = argparse.ArgumentParser(description='Build Network AI Monitor Desktop App')
+    parser = argparse.ArgumentParser(
+        description='Build Network AI Monitor - Cross-Platform Executable Builder'
+    )
     parser.add_argument('--clean', action='store_true', help='Clean before build')
-    parser.add_argument('--onefile', action='store_true', help='Build single executable file')
-    parser.add_argument('--installer', action='store_true', help='Build installer (requires Inno Setup)')
-    parser.add_argument('--zip', action='store_true', help='Create portable ZIP')
-    parser.add_argument('--all', action='store_true', help='Build everything')
+    parser.add_argument('--onefile', action='store_true', help='Build single executable file (default)')
+    parser.add_argument('--directory', action='store_true', help='Build directory bundle instead of one-file')
+    parser.add_argument('--archive', action='store_true', help='Create compressed archive')
+    parser.add_argument('--install', action='store_true', help='Install dependencies only')
+    parser.add_argument('--all', action='store_true', help='Build all formats (onefile + archive)')
     
     args = parser.parse_args()
     
-    # If no arguments, build standard executable
-    if not any([args.clean, args.onefile, args.installer, args.zip, args.all]):
-        args.all = True
-    
-    print("""
+    # Print banner
+    print(f"""
 ╔══════════════════════════════════════════════════════════════╗
-║           Network AI Monitor - Build System                   ║
+║           Network AI Monitor - Cross-Platform Build           ║
 ║                                                              ║
-║  Building desktop application with PyInstaller             ║
+║  Platform: {get_platform().title():20} PyInstaller Bundle           ║
 ╚══════════════════════════════════════════════════════════════╝
     """)
     
+    # Install only mode
+    if args.install:
+        if install_dependencies():
+            print("\n✓ Dependencies installed successfully!")
+            sys.exit(0)
+        else:
+            print("\n✗ Failed to install dependencies")
+            sys.exit(1)
+    
     # Clean if requested
-    if args.clean or args.all:
+    if args.clean:
         clean_build()
     
     # Install dependencies
     if not install_dependencies():
-        print("Failed to install dependencies")
+        print("\n✗ Failed to install dependencies")
         sys.exit(1)
-    
-    # Create icon
-    create_icon()
     
     success = True
     
-    # Build executable
-    if args.all or not args.installer:
-        if args.onefile or args.all:
-            success = build_executable(onefile=True) and success
-        if not args.onefile or args.all:
-            success = build_executable(onefile=False) and success
+    # Determine build type
+    build_onefile = not args.directory  # Default to onefile unless --directory specified
+    
+    if args.all or build_onefile:
+        success = build_executable(onefile=True) and success
+    
+    if args.directory or args.all:
+        success = build_executable(onefile=False) and success
     
     # Verify build
-    if not args.onefile:
-        verify_build()
+    verify_build()
     
-    # Build installer
-    if args.installer or args.all:
-        build_installer()
-    
-    # Create portable ZIP
-    if args.zip or args.all:
-        create_portable_zip()
+    # Create archive if requested
+    if args.archive or args.all:
+        create_archive()
     
     # Summary
     print("\n" + "="*60)
-    print("  BUILD COMPLETE")
+    print("  BUILD SUMMARY")
     print("="*60)
-    print("\nOutput files in 'dist' directory:")
     
     dist_dir = Path('dist')
     if dist_dir.exists():
-        for item in dist_dir.iterdir():
-            if item.is_file():
-                size = item.stat().st_size / 1024 / 1024
-                print(f"  • {item.name} ({size:.2f} MB)")
-            elif item.is_dir():
-                print(f"  • {item.name}/ (directory)")
+        files = list(dist_dir.iterdir())
+        if files:
+            print(f"\n  Output files in 'dist/':")
+            for item in files:
+                if item.is_file():
+                    size = item.stat().st_size / 1024 / 1024
+                    print(f"    • {item.name:40} ({size:6.2f} MB)")
+                else:
+                    print(f"    • {item.name}/ (directory)")
+            
+            print(f"\n  ✓ Build successful!")
+            print(f"\n  To run the app:")
+            exe_name = get_executable_name()
+            if get_platform() == 'windows':
+                print(f"    dist\\{exe_name}")
+            else:
+                print(f"    ./{exe_name}  (or open the .app on macOS)")
+        else:
+            print("  ✗ No output files found")
+            success = False
+    else:
+        print("  ✗ Build failed - no dist directory")
+        success = False
     
-    print("\n✓ Build complete!")
-    
-    if not success:
-        sys.exit(1)
+    sys.exit(0 if success else 1)
 
 if __name__ == '__main__':
     main()
