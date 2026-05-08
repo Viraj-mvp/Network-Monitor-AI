@@ -8,7 +8,6 @@
   <img src="https://img.shields.io/badge/PySide6-GUI-41CD52?style=for-the-badge&logo=qt&logoColor=white" />
   <img src="https://img.shields.io/badge/AI-Anomaly%20Detection-FF6B6B?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" />
 
 </p>
 
@@ -133,16 +132,49 @@
 
 # ⚡ Quick Start
 
-## 1️⃣ Clone Repository
+## 🖥️ Desktop Installation (Recommended)
 
-```bash
-git clone https://github.com/your-username/network-ai-monitor.git
-cd network-ai-monitor
-```
+### Download Pre-built Installer
+
+[![Download for Windows](https://img.shields.io/badge/Download-Windows%20Setup-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
+
+**Latest Release:** [Download Network AI Monitor v1.0.0](https://github.com/Viraj-mvp/Network-Monitor-AI/releases/latest)
+
+### Installation Steps
+
+1. **Download** the latest `NetworkAIMonitor-Setup-v1.0.0.exe` from [Releases](https://github.com/Viraj-mvp/Network-Monitor-AI/releases)
+2. **Run** the installer and follow the setup wizard
+3. **Launch** Network AI Monitor from your Desktop or Start Menu
+4. **Configure** your email alerts in Settings (optional)
+
+### System Requirements
+
+- Windows 10/11 (64-bit)
+- 4GB RAM minimum (8GB recommended)
+- 100MB free disk space
+- Network interface (WiFi/Ethernet)
+
+### Portable Version
+
+For users who prefer a portable app without installation:
+
+1. Download `NetworkAIMonitor-Portable.exe` or `NetworkAIMonitor-Portable.zip`
+2. Extract to any folder (for ZIP version)
+3. Run `NetworkAIMonitor.exe` directly
+4. All data saved in the same folder
 
 ---
 
-## 2️⃣ Install Dependencies
+## 🛠️ Developer Setup
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Viraj-mvp/Network-Monitor-AI.git
+cd Network-Monitor-AI
+```
+
+### 1️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -150,11 +182,45 @@ pip install -r requirements.txt
 
 ---
 
-## 3️⃣ Run Application
+## 2️⃣ Run Application
 
 ```bash
 python dashboard_main.py
 ```
+
+### Building Desktop App (Developers)
+
+To build the desktop installer locally:
+
+```bash
+# Install build dependencies
+pip install pyinstaller pillow
+
+# Build using the build script
+python build.py --all
+
+# Or build individual components
+python build.py --onefile     # Portable executable
+python build.py --installer   # Windows installer (requires Inno Setup)
+```
+
+**Requirements for building installer:**
+- [Inno Setup 6](https://jrsoftware.org/isdl.php) (for Windows installer)
+- Python 3.8 or higher
+- Windows 10/11
+
+---
+
+## 📦 GitHub Actions Auto-Build
+
+This repository automatically builds desktop apps on every release:
+
+1. Create a new tag: `git tag v1.0.0`
+2. Push the tag: `git push origin v1.0.0`
+3. GitHub Actions will build and attach installers to the release
+4. Users can download directly from the Releases page
+
+---
 
 ---
 
@@ -336,68 +402,22 @@ pytest tests/
 
 ---
 
-# 🐳 Future Roadmap
-
-## Planned Enterprise Features
-
-* [ ] Docker Deployment
-* [ ] Kubernetes Monitoring
-* [ ] PostgreSQL Storage
-* [ ] Prometheus Integration
-* [ ] Grafana Dashboards
-* [ ] Machine Learning Models
-* [ ] SIEM Integration
-* [ ] Packet Deep Inspection
-* [ ] Web Dashboard Version
-* [ ] Distributed Monitoring Agents
-
----
-
-# 📸 Screenshots Folder Structure
-
-```text
-assets/
-├── dashboard-preview.png
-├── dark-mode.png
-├── light-mode.png
-├── traffic-graph.png
-├── architecture.png
-└── ai-pipeline.png
-```
-
----
-
-# 🤝 Contributing
-
-Contributions are welcome.
-
-## Development Workflow
-
-```bash
-Fork → Branch → Commit → Push → Pull Request
-```
-
----
-
 # ⭐ Repository Stats Section
 
-Add these dynamically later:
 
-```md
-![GitHub stars](https://img.shields.io/github/stars/your-username/network-ai-monitor?style=social)
+<p align="center">
 
-![GitHub forks](https://img.shields.io/github/forks/your-username/network-ai-monitor?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
 
-![GitHub issues](https://img.shields.io/github/issues/your-username/network-ai-monitor)
-```
+![GitHub forks](https://img.shields.io/github/forks/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
 
----
+![GitHub issues](https://img.shields.io/github/issues/Viraj-mvp/Network-Monitor-AI?style=for-the-badge&logo=github)
 
-# 📜 License
 
-MIT License © 2026
+</p>
 
 ---
+
 
 # 👨‍💻 Author
 
@@ -408,6 +428,17 @@ MIT License © 2026
 * Ethical Hackers
 * Network Researchers
 * Performance Engineers
+
+---
+
+# 📁 Download Options
+
+| Format | File | Description |
+|--------|------|-------------|
+| 💿 **Installer** | `NetworkAIMonitor-Setup-v1.0.0.exe` | Full Windows installer with Start Menu shortcuts |
+| 📦 **Portable** | `NetworkAIMonitor-Portable.exe` | Single-file executable, no installation needed |
+| 🗜️ **ZIP** | `NetworkAIMonitor-Portable.zip` | Portable version in ZIP format |
+| 🐍 **Source** | `Source Code (zip)` | Original Python source code |
 
 ---
 

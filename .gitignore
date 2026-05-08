@@ -16,7 +16,8 @@ build/
 dist/
 downloads/
 out/
-*.spec
+!NetworkMonitor.spec
+!build.py
 *.exe
 *.msi
 *.whl
