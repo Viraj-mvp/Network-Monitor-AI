@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QWidget, QApplication
 from PySide6.QtGui import QAction
 from PySide6.QtCore import Signal, QObject
 from PySide6.QtGui import QIcon, QPixmap
+from pathlib import Path
 
 from utils.resources import resource_path
 
@@ -115,7 +116,11 @@ class SystemTray(QObject):
     def _update_icon(self):
         """Update tray icon based on state"""
         try:
-            icon_path = resource_path('assets/icon.ico')
+            # Try PNG first, then ICO as fallback
+            icon_path = resource_path('assets/icon.png')
+            if not Path(icon_path).exists():
+                icon_path = resource_path('assets/icon.ico')
+            
             icon = QIcon(icon_path)
             
             # TODO: Create different icon states (normal, monitoring, alert)

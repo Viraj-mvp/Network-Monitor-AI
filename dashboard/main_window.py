@@ -8,6 +8,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 import darkdetect
+from utils.resources import resource_path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -76,6 +77,11 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("AI Network Monitor - Dashboard")
         self.setGeometry(100, 100, 1400, 900)
+        
+        # Set application icon
+        icon_path = resource_path("assets/icon.png")
+        if icon_path and Path(icon_path).exists():
+            self.setWindowIcon(QIcon(icon_path))
         
         # Initialize monitoring state
         self.monitoring_active = False
