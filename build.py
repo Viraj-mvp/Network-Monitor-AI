@@ -18,22 +18,32 @@ def print_step(step: str):
     print(f"  {step}")
     print(f"{'='*60}\n")
 
-def run_command(cmd: list, cwd: str = None) -> bool:
+def run_command(cmd: list, cwd: str = None, verbose: bool = True) -> bool:
     """Run a command and return success status"""
     try:
+        if verbose:
+            print(f"  Running: {' '.join(cmd[:10])}{'...' if len(cmd) > 10 else ''}")
+        
         result = subprocess.run(
             cmd,
             cwd=cwd,
             check=True,
-            capture_output=False,
+            capture_output=not verbose,
             text=True
         )
         return True
     except subprocess.CalledProcessError as e:
-        print(f"Error: Command failed with exit code {e.returncode}")
+        print(f"  ✗ Error: Command failed with exit code {e.returncode}")
+        if e.stdout:
+            print(f"  stdout: {e.stdout[-500:]}")  # Last 500 chars
+        if e.stderr:
+            print(f"  stderr: {e.stderr[-500:]}")  # Last 500 chars
         return False
     except FileNotFoundError as e:
-        print(f"Error: Command not found - {e}")
+        print(f"  ✗ Error: Command not found - {e}")
+        return False
+    except Exception as e:
+        print(f"  ✗ Unexpected error: {e}")
         return False
 
 def get_platform():
@@ -336,6 +346,7 @@ def main():
     parser.add_argument('--archive', action='store_true', help='Create compressed archive')
     parser.add_argument('--install', action='store_true', help='Install dependencies only')
     parser.add_argument('--all', action='store_true', help='Build all formats (onefile + archive)')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
     
     args = parser.parse_args()
     
