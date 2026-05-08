@@ -20,6 +20,7 @@ dist/
 downloads/
 out/
 *.spec
+!NetworkMonitor.spec
 *.exe
 *.msi
 *.app
@@ -29,6 +30,8 @@ out/
 *.rpm
 *.whl
 !build.py
+!build_release.py
+!NetworkMonitor.spec
 
 # IDE Settings
 .vscode/

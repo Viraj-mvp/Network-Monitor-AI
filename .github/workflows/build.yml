@@ -1,4 +1,4 @@
-name: Build Cross-Platform Executables
+name: Build Professional Cross-Platform Releases
 
 on:
   push:
@@ -24,40 +24,23 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Debug - List files
-        run: |
-          dir
-          type requirements.txt
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install pyinstaller pillow
           pip install -r requirements.txt
-          pip list
 
-      - name: Build Windows executable
+      - name: Build Windows Release
         run: |
-          python -m PyInstaller --version
-          python build.py --onefile --archive --verbose
+          python build_release.py --onedir
         timeout-minutes: 45
 
-      - name: Debug - Check dist folder
-        if: always()
-        run: |
-          if exist dist (
-            dir dist /s
-          ) else (
-            echo "dist folder not found"
-          )
-
-      - name: Upload Windows executable
+      - name: Upload Windows Release
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: NetworkAIMonitor-Windows
-          path: dist/*
-          if-no-files-found: warn
+          path: release/*.zip
+          if-no-files-found: error
 
   build-macos:
     runs-on: macos-latest
@@ -75,26 +58,18 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install pyinstaller pillow
           pip install -r requirements.txt
-          pip list
 
-      - name: Build macOS executable
+      - name: Build macOS Release
         run: |
-          python -m PyInstaller --version
-          python build.py --onefile --archive --verbose
+          python build_release.py --onedir
         timeout-minutes: 45
 
-      - name: Debug - Check dist folder
-        if: always()
-        run: |
-          ls -la dist/ 2>/dev/null || echo "dist folder not found"
-
-      - name: Upload macOS executable
+      - name: Upload macOS Release
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: NetworkAIMonitor-macOS
-          path: dist/*
-          if-no-files-found: warn
+          path: release/*.zip
+          if-no-files-found: error
 
   build-linux:
     runs-on: ubuntu-latest
@@ -117,26 +92,18 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install pyinstaller pillow
           pip install -r requirements.txt
-          pip list
 
-      - name: Build Linux executable
+      - name: Build Linux Release
         run: |
-          python -m PyInstaller --version
-          python build.py --onefile --archive --verbose
+          python build_release.py --onedir
         timeout-minutes: 45
 
-      - name: Debug - Check dist folder
-        if: always()
-        run: |
-          ls -la dist/ 2>/dev/null || echo "dist folder not found"
-
-      - name: Upload Linux executable
+      - name: Upload Linux Release
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: NetworkAIMonitor-Linux
-          path: dist/*
-          if-no-files-found: warn
+          path: release/*.tar.gz
+          if-no-files-found: error
 
   release:
     needs: [build-windows, build-macos, build-linux]
@@ -154,8 +121,10 @@ jobs:
       - name: List artifacts
         run: |
           ls -la artifacts/
+          echo "---"
+          find artifacts/ -type f -exec ls -lh {} \;
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |

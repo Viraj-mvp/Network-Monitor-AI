@@ -1,0 +1,12 @@
+# Build dependencies for Network AI Monitor
+# Install: pip install -r requirements-build.txt
+
+# PyInstaller for building standalone executables
+pyinstaller>=5.13.0
+pyinstaller-hooks-contrib>=2023.0
+
+# Image processing for icon generation
+pillow>=10.0.0
+
+# Optional: UPX for compression (install separately)
+# Download from: https://upx.github.io/
