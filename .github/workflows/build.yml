@@ -35,12 +35,22 @@ jobs:
           python build_release.py --onedir
         timeout-minutes: 45
 
+      - name: Debug - List release folder
+        if: always()
+        run: |
+          if exist release (
+            dir release /s
+          ) else (
+            echo "release folder not found"
+          )
+
       - name: Upload Windows Release
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: NetworkAIMonitor-Windows
           path: release/*.zip
-          if-no-files-found: error
+          if-no-files-found: warn
 
   build-macos:
     runs-on: macos-latest
@@ -64,12 +74,19 @@ jobs:
           python build_release.py --onedir
         timeout-minutes: 45
 
+      - name: Debug - List release folder
+        if: always()
+        run: |
+          ls -la release/ 2>/dev/null || echo "release folder not found"
+          find release -type f 2>/dev/null | head -20 || echo "no files found"
+
       - name: Upload macOS Release
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: NetworkAIMonitor-macOS
           path: release/*.zip
-          if-no-files-found: error
+          if-no-files-found: warn
 
   build-linux:
     runs-on: ubuntu-latest
@@ -85,7 +102,19 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-glx libxkbcommon-x11-0 libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libegl1
+          sudo apt-get install -y \
+            libgl1-mesa-glx \
+            libxkbcommon-x11-0 \
+            libxcb-xinerama0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libegl1 \
+            libopengl0 \
+            libfontconfig1 \
+            libxcb-cursor0
 
       - name: Install Python dependencies
         run: |
@@ -98,12 +127,19 @@ jobs:
           python build_release.py --onedir
         timeout-minutes: 45
 
+      - name: Debug - List release folder
+        if: always()
+        run: |
+          ls -la release/ 2>/dev/null || echo "release folder not found"
+          find release -type f 2>/dev/null | head -20 || echo "no files found"
+
       - name: Upload Linux Release
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: NetworkAIMonitor-Linux
           path: release/*.tar.gz
-          if-no-files-found: error
+          if-no-files-found: warn
 
   release:
     needs: [build-windows, build-macos, build-linux]

@@ -32,30 +32,52 @@ else:  # Linux
 if not icon_file.exists():
     icon_file = None
 
-# Data files to include
+# Data files to include - all project modules
 datas = [
     (str(project_root / 'core'), 'core'),
     (str(project_root / 'dashboard'), 'dashboard'),
+    (str(project_root / 'utils'), 'utils'),
+    (str(project_root / 'services'), 'services'),
     (str(project_root / 'assets'), 'assets'),
     (str(project_root / 'config'), 'config'),
 ]
 
-# Hidden imports
+# Hidden imports - comprehensive list for cross-platform compatibility
 hiddenimports = [
+    # PySide6
     'PySide6',
     'PySide6.QtCore',
     'PySide6.QtGui',
     'PySide6.QtWidgets',
     'PySide6.QtNetwork',
+    'PySide6.QtOpenGL',
+    # psutil
     'psutil',
+    # pyqtgraph and submodules
     'pyqtgraph',
     'pyqtgraph.graphicsItems',
+    'pyqtgraph.widgets',
+    'pyqtgraph.parametertree',
+    'pyqtgraph.parametertree.interactive',
+    'pyqtgraph.opengl',
+    'pyqtgraph.Point',
+    # numpy (needed by pyqtgraph)
+    'numpy',
+    'numpy.core',
+    'numpy.core._dtype',
+    'numpy.core._multiarray_umath',
+    'numpy.core._umath',
+    'numpy.linalg',
+    'numpy.linalg._umath_linalg',
+    # other deps
     'darkdetect',
     'dotenv',
+    # project modules
     'core',
     'core.network_monitor',
     'core.ai_engine',
     'core.email_alert',
+    'core.system_monitor',
     'dashboard',
     'dashboard.main_window',
     'dashboard.widgets',
@@ -64,9 +86,12 @@ hiddenimports = [
     'dashboard.alert_panel',
     'dashboard.log_viewer',
     'dashboard.settings_panel',
+    'utils',
+    'utils.resources',
 ]
 
 # Modules to exclude (reduces size)
+# NOTE: Don't exclude pydoc - needed by pyqtgraph
 excludes = [
     'tkinter',
     'tkinter.constants',
@@ -75,8 +100,6 @@ excludes = [
     'pytest',
     'test',
     'tests',
-    'pydoc',
-    'pydoc_data',
     'http.server',
     'xmlrpc',
     'xmlrpc.server',
