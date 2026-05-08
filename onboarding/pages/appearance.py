@@ -77,7 +77,7 @@ class AppearancePage(QWizardPage):
         self.close_to_tray = QCheckBox("Keep running in tray when closing window")
         self.close_to_tray.setChecked(True)
         self.close_to_tray.setToolTip(
-            "When checked, closing the window will minimize to tray instead of exiting"
+            "When checked, closing the window will keep the app running in the system tray"
         )
         startup_layout.addWidget(self.close_to_tray)
         
@@ -94,7 +94,7 @@ class AppearancePage(QWizardPage):
             self.startup_with_system = QCheckBox("Start with Windows")
             self.startup_with_system.setChecked(False)
             self.startup_with_system.setToolTip(
-                "Launch Network AI Monitor automatically when you log in"
+                "Launch Network AI Monitor automatically when you log in to Windows"
             )
             startup_layout.addWidget(self.startup_with_system)
         else:
@@ -143,11 +143,8 @@ class AppearancePage(QWizardPage):
             'start_minimized': self.start_minimized.isChecked(),
             'minimize_to_tray': self.minimize_to_tray.isChecked(),
             'close_to_tray': self.close_to_tray.isChecked(),
-            'auto_start_monitoring': self.auto_start_monitoring.isChecked()
+            'startup_with_system': self.startup_with_system.isChecked() if hasattr(self, 'startup_with_system') else False
         }
-        
-        if self.startup_with_system:
-            settings['startup_with_system'] = self.startup_with_system.isChecked()
         
         return settings
     

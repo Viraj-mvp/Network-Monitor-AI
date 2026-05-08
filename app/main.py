@@ -189,9 +189,8 @@ class Application:
                 self._main_window.raise_()
                 self._main_window.activateWindow()
             
-            # Auto-start monitoring if configured
-            if self._config.appearance.auto_start_monitoring:
-                QTimer.singleShot(500, self._auto_start_monitoring)
+            # Auto-start monitoring (always enabled for professional app)
+            QTimer.singleShot(500, self._auto_start_monitoring)
                 
         except Exception as e:
             print(f"Error continuing load: {e}")
