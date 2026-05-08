@@ -8,7 +8,6 @@
   <img src="https://img.shields.io/badge/PySide6-GUI-41CD52?style=for-the-badge&logo=qt&logoColor=white" />
   <img src="https://img.shields.io/badge/AI-Anomaly%20Detection-FF6B6B?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" />
 
 </p>
 
@@ -95,8 +94,6 @@
 + Real-Time Interface Monitoring
 + AI-Based Anomaly Detection
 + Historical Traffic Logging
-+ Animated Dashboard Widgets
-+ Cyberpunk Theme Engine
 + Email Alert System
 + Responsive Desktop UI
 + Multi-Threaded Processing
